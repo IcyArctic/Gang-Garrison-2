@@ -23,6 +23,7 @@
     canBuild = 0;
     jumpStrength = 8;
     capStrength = 1;
+    intelRecharge = 0;
     
     // 
     hp = maxHp;
@@ -70,11 +71,11 @@
     animationOffset = CHARACTER_ANIMATION_NORMAL;
     animationImage = 0;
     humiliationOffset = irandom(10)*3; //support for 10 different animations is more than enough
-
+    
     //kill assist/finish off addition
-    lastDamageDealer = noone;
+    lastDamageDealer = -1;
     lastDamageSource = -1;
-    secondToLastDamageDealer = noone;
+    secondToLastDamageDealer = -1;
     
     bubble = instance_create(0,0,SpeechBubbleO);
     bubble.owner = id;
@@ -91,7 +92,6 @@
     //canGrabIntel- used for droppan intel
     canGrabIntel = true;
     alarm[1] = 0;
-    intelRecharge = 0;
     
     //CP
     cappingPoint = noone;
@@ -99,7 +99,7 @@
     //sandvich
     omnomnomnom = false;
     canEat = true;
-    eatCooldown = 1350; //45 sec cooldown
+    eatCooldown = 1200; //40 sec cooldown
     
     //sniper zoom
     zoomed = 0;

@@ -273,11 +273,11 @@ do {
             
             player = ds_list_find_value(global.players, playerID);
             if(otherPlayerID == 255) {
-                doEventDestruction(player, noone, noone, causeOfDeath);
+                doEventDestruction(player, -1, -1, causeOfDeath);
             } else {
                 otherPlayer = ds_list_find_value(global.players, otherPlayerID);
                 if (assistantPlayerID == 255) {
-                    doEventDestruction(player, otherPlayer, noone, causeOfDeath);
+                    doEventDestruction(player, otherPlayer, -1, causeOfDeath);
                 } else {
                     assistantPlayer = ds_list_find_value(global.players, assistantPlayerID);
                     doEventDestruction(player, otherPlayer, assistantPlayer, causeOfDeath);
@@ -300,7 +300,9 @@ do {
         case DROP_INTEL:
             receiveCompleteMessage(global.serverSocket,1,global.tempBuffer);
             player = ds_list_find_value(global.players, read_ubyte(global.tempBuffer));
-            doEventDropIntel(player); 
+            if player.object != -1 {
+                with player.object event_user(5); 
+            }
             break;
             
         case RETURN_INTEL:

@@ -17,13 +17,13 @@
 {
     if (reflector != noone and alarm[0] &lt; 0)
         alarm[0] = 30;
-    splashThreshhold = false;
+    blastRadius = bestBlastRadius
 }
 else
 {
     vspeed += 0.2;
     vspeed = min(vspeed,8);
-    splashThreshhold = true;
+    blastRadius = bestBlastRadius * 0.71; //approximation of sqrt(0.5)
 }
 </argument>
       </arguments>

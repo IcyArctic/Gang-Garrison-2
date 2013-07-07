@@ -83,7 +83,7 @@ while(commandLimitRemaining > 0) {
                     {
                         if (collision_point(x,y,SpawnRoom,0,0) < 0)
                         {
-                            if (instance_exists(lastDamageDealer) || lastDamageDealer == player)
+                            if (lastDamageDealer == -1 || lastDamageDealer == player)
                             {
                                 sendEventPlayerDeath(player, player, noone, BID_FAREWELL);
                                 doEventPlayerDeath(player, player, noone, BID_FAREWELL);
@@ -92,8 +92,8 @@ while(commandLimitRemaining > 0) {
                             {
                                 var assistant;
                                 assistant = secondToLastDamageDealer;
-                                if (lastDamageDealer.object)
-                                    if (lastDamageDealer.object.healer)
+                                if (lastDamageDealer.object != -1)
+                                    if (lastDamageDealer.object.healer != -1)
                                         assistant = lastDamageDealer.object.healer;
                                 sendEventPlayerDeath(player, lastDamageDealer, assistant, FINISHED_OFF);
                                 doEventPlayerDeath(player, lastDamageDealer, assistant, FINISHED_OFF);
@@ -106,7 +106,7 @@ while(commandLimitRemaining > 0) {
                 }
                 else if(player.alarm[5]<=0)
                     player.alarm[5] = 1;
-                class = checkClasslimits(player, player.team, class);
+                class = checkClasslimits(player.team, class);
                 player.class = class;
                 ServerPlayerChangeclass(playerId, player.class, global.sendBuffer);
             }
@@ -139,7 +139,7 @@ while(commandLimitRemaining > 0) {
                     {
                         with(player.object)
                         {
-                            if (!instance_exists(lastDamageDealer) || lastDamageDealer == player)
+                            if (lastDamageDealer == -1 || lastDamageDealer == player)
                             {
                                 sendEventPlayerDeath(player, player, noone, BID_FAREWELL);
                                 doEventPlayerDeath(player, player, noone, BID_FAREWELL);
@@ -148,8 +148,8 @@ while(commandLimitRemaining > 0) {
                             {
                                 var assistant;
                                 assistant = secondToLastDamageDealer;
-                                if (lastDamageDealer.object)
-                                    if (lastDamageDealer.object.healer)
+                                if (lastDamageDealer.object != -1)
+                                    if (lastDamageDealer.object.healer != -1)
                                         assistant = lastDamageDealer.object.healer;
                                 sendEventPlayerDeath(player, lastDamageDealer, assistant, FINISHED_OFF);
                                 doEventPlayerDeath(player, lastDamageDealer, assistant, FINISHED_OFF);
@@ -160,7 +160,7 @@ while(commandLimitRemaining > 0) {
                     else if(player.alarm[5]<=0)
                         player.alarm[5] = 1;                    
                     var newClass;
-                    newClass = checkClasslimits(player, newTeam, player.class);
+                    newClass = checkClasslimits(newTeam, player.class);
                     if newClass != player.class
                     {
                         player.class = newClass;
@@ -211,14 +211,11 @@ while(commandLimitRemaining > 0) {
                 instance_destroy();
             break;                     
         
-        case DROP_INTEL:
-            if (player.object != -1)
-            {
-                if (player.object.intel)
-                {
-                    sendEventDropIntel(player);
-                    doEventDropIntel(player);
-                }
+        case DROP_INTEL:                                                                  
+            if(player.object != -1) {
+                write_ubyte(global.sendBuffer, DROP_INTEL);
+                write_ubyte(global.sendBuffer, playerId);
+                with player.object event_user(5);  
             }
             break;     
               
@@ -235,6 +232,11 @@ while(commandLimitRemaining > 0) {
                     with(player.object)
                     {
                         omnomnomnom = true;
+                        if(hp < maxHp)
+                        {
+                            canEat = false;
+                            alarm[6] = eatCooldown; //10 second cooldown
+                        }
                         if player.team == TEAM_RED {
                             omnomnomnomindex=0;
                             omnomnomnomend=31;

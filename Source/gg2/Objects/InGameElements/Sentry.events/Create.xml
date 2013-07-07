@@ -27,8 +27,9 @@ image_speed = 0;
 landed=0;
 humiliated = 0;
        
-lastDamageDealer = noone;
+lastDamageDealer = -1;
 lastDamageSource = -1;
+secondToLastDamageDealer = -1;
 
 idleTimer = true;
 </argument>
